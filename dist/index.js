@@ -70,10 +70,7 @@ function removeNode(alert, seconds) {
 function appendCloseButton(alertText) {
     var newClosebutton = closebutton.cloneNode(true);
     var clickEvent = function (e) {
-        if (!e.srcElement) {
-            return;
-        }
-        var closestAlert = e.srcElement.closest('.alert');
+        var closestAlert = e.target.closest('.alert');
         if (!closestAlert) {
             return;
         }
