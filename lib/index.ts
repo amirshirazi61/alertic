@@ -1,3 +1,6 @@
+declare function require(name: string): string;
+const s = require('./styles.css');
+
 var alertContainer = document.createElement('div');
 alertContainer.id = 'alertContainer';
 alertContainer.style.position = 'fixed';
@@ -30,7 +33,7 @@ closebutton.style.right = '0';
 closebutton.style.color = '#B7474C';
 
 var closeIcon = document.createElement('i');
-closeIcon.setAttribute('class', 'fa fa-times');
+closeIcon.setAttribute('class', 'close');
 closeIcon.addEventListener('click', () => {
   console.log('click');
 });
