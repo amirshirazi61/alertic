@@ -27,34 +27,72 @@ var closebutton = document.createElement('span');
 closebutton.style.position = 'absolute';
 closebutton.style.top = '0';
 closebutton.style.right = '0';
-closebutton.style.color = '#B7474C';
 
 var closeIcon = document.createElement('i');
-closeIcon.setAttribute('class', 'fa fa-times');
+closeIcon.setAttribute('class', 'close');
 closeIcon.addEventListener('click', () => {
   console.log('click');
 });
+
+enum alertMode {
+  success = 'success',
+  error = 'error',
+  warning = 'warning'
+}
 
 closebutton.appendChild(closeIcon);
 
 alert.appendChild(alertText);
 
-var body = document.getElementsByName('body');
+document.onreadystatechange = () => {
+  if (document.readyState === 'complete') {
+    let head = document.head;
+    if (!head) {
+      head = document.createElement('head');
+      document.body.appendChild(head);
+    }
+    const styleText = document.createElement('style');
+    styleText.innerHTML =
+      ".alert{ \
+        font-family: Arial, Helvetica, sans-serif;\
+      }\
+      .close:before {\
+          cursor:pointer;\
+          content: 'x';\
+          font-style: normal;\
+          font-weight: bold;\
+          color: inherit;\
+        }\
+        .close:hover {\
+          opacity: 0.6\
+        }";
+
+    head.appendChild(styleText);
+  }
+};
 
 function successAlert(message: string, lastInSeconds?: number) {
-  alertFunction(message, 'success', lastInSeconds);
+  alertFunction(message, alertMode.success, lastInSeconds);
 }
 
-function alertFunction(message: string, mode: string, lastInSeconds?: number) {
+function alertFunction(
+  message: string,
+  mode: alertMode,
+  lastInSeconds?: number
+) {
   var newAlert = <HTMLElement>alert.cloneNode();
   var newAlertText = <HTMLElement>alertText.cloneNode();
 
   switch (mode) {
-    case 'error':
+    case alertMode.error:
       newAlertText.style.backgroundColor = '#F1DEDE';
       newAlertText.style.color = '#a94442';
       newAlertText.style.borderColor = '#ebcccc';
       break;
+    case alertMode.warning:
+      newAlertText.style.backgroundColor = '#FEF3CF';
+      newAlertText.style.color = '#856404';
+      newAlertText.style.borderColor = '#ffeeba';
   }
 
   newAlertText.textContent = message;
@@ -69,7 +107,11 @@ function alertFunction(message: string, mode: string, lastInSeconds?: number) {
 }
 
 function errorAlert(message: string, lastInSeconds?: number) {
-  alertFunction(message, 'error', lastInSeconds);
+  alertFunction(message, alertMode.error, lastInSeconds);
+}
+
+function warningAlert(message: string, lastInSeconds?: number) {
+  alertFunction(message, alertMode.warning, lastInSeconds);
 }
 
 function removeNode(alert: HTMLElement, seconds: number) {
@@ -103,5 +145,6 @@ export const genericErrorMessage = `There is an internal server error. Please co
 
 export var alertic = {
   success: successAlert,
-  error: errorAlert
+  error: errorAlert,
+  warning: warningAlert
 };

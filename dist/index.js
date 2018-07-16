@@ -26,27 +26,60 @@ var closebutton = document.createElement('span');
 closebutton.style.position = 'absolute';
 closebutton.style.top = '0';
 closebutton.style.right = '0';
-closebutton.style.color = '#B7474C';
 var closeIcon = document.createElement('i');
-closeIcon.setAttribute('class', 'fa fa-times');
+closeIcon.setAttribute('class', 'close');
 closeIcon.addEventListener('click', function () {
     console.log('click');
 });
+var alertMode;
+(function (alertMode) {
+    alertMode["success"] = "success";
+    alertMode["error"] = "error";
+    alertMode["warning"] = "warning";
+})(alertMode || (alertMode = {}));
 closebutton.appendChild(closeIcon);
 alert.appendChild(alertText);
-var body = document.getElementsByName('body');
+document.onreadystatechange = function () {
+    if (document.readyState === 'complete') {
+        var head = document.head;
+        if (!head) {
+            head = document.createElement('head');
+            document.body.appendChild(head);
+        }
+        var styleText = document.createElement('style');
+        styleText.innerHTML =
+            ".alert{ \
+        font-family: Arial, Helvetica, sans-serif;\
+      }\
+      .close:before {\
+          cursor:pointer;\
+          content: 'x';\
+          font-style: normal;\
+          font-weight: bold;\
+          color: inherit;\
+        }\
+        .close:hover {\
+          opacity: 0.6\
+        }";
+        head.appendChild(styleText);
+    }
+};
 function successAlert(message, lastInSeconds) {
-    alertFunction(message, 'success', lastInSeconds);
+    alertFunction(message, alertMode.success, lastInSeconds);
 }
 function alertFunction(message, mode, lastInSeconds) {
     var newAlert = alert.cloneNode();
     var newAlertText = alertText.cloneNode();
     switch (mode) {
-        case 'error':
+        case alertMode.error:
             newAlertText.style.backgroundColor = '#F1DEDE';
             newAlertText.style.color = '#a94442';
             newAlertText.style.borderColor = '#ebcccc';
             break;
+        case alertMode.warning:
+            newAlertText.style.backgroundColor = '#FEF3CF';
+            newAlertText.style.color = '#856404';
+            newAlertText.style.borderColor = '#ffeeba';
     }
     newAlertText.textContent = message;
     newAlert.appendChild(newAlertText);
@@ -58,7 +91,10 @@ function alertFunction(message, mode, lastInSeconds) {
         removeNode(newAlert, lastInSeconds);
 }
 function errorAlert(message, lastInSeconds) {
-    alertFunction(message, 'error', lastInSeconds);
+    alertFunction(message, alertMode.error, lastInSeconds);
+}
+function warningAlert(message, lastInSeconds) {
+    alertFunction(message, alertMode.warning, lastInSeconds);
 }
 function removeNode(alert, seconds) {
     setTimeout(function () {
@@ -85,5 +121,6 @@ function appendCloseButton(alertText) {
 exports.genericErrorMessage = "There is an internal server error. Please contact the site administrator.";
 exports.alertic = {
     success: successAlert,
-    error: errorAlert
+    error: errorAlert,
+    warning: warningAlert
 };
