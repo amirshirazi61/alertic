@@ -2,4 +2,5 @@ export declare const genericErrorMessage = "There is an internal server error. P
 export declare var alertic: {
     success: (message: string, lastInSeconds?: number | undefined) => void;
     error: (message: string, lastInSeconds?: number | undefined) => void;
+    warning: (message: string, lastInSeconds?: number | undefined) => void;
 };
